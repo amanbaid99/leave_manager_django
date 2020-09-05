@@ -1,6 +1,15 @@
 {% extends 'leaveApp/main.html' %}
+{% load bootstrap4 %}
 {% block content %}
 
-<h1>login page</h1>
-    
+<div class="container">
+    <h1>LOGIN</h1>
+    <form  method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit"  class="btn btn-primary" value="LOGIN">
+        
+    </form>
+</div>
+
 {% endblock content %}
