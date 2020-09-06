@@ -13,8 +13,8 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     dept=None
     user=request.user
-    if user.is_superuser:
-        print('superuser')
+    if user.is_superuser or user.is_anonymous:
+        pass
     else:
         u=User.objects.get(username=user)
         dept=u.employee.e_type
@@ -26,8 +26,8 @@ def home(request):
 def register(request):
     dept=None
     user=request.user
-    if user.is_superuser:
-        print('superuser')
+    if user.is_superuser or user.is_anonymous:
+        pass
     else:
         u=User.objects.get(username=user)
         dept=u.employee.e_type

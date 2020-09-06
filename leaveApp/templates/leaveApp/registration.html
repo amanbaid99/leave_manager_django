@@ -6,6 +6,8 @@
         <h1>Thank you for registering!</h1>
       {%  elif dept == "employee" %}
         <h1>You are not authorized</h1>
+     {% elif user.is_anonymous %}
+     <h1>Please login</h1>
       {% else %}
         <h1>Register Here</h1>
         <h3>Just fill out the form.</h3>
