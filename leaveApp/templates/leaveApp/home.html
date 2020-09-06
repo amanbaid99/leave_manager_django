@@ -1,15 +1,52 @@
 {% extends 'leaveApp/main.html' %}
 {% block content %}
 
-{% if dept == "employee" %}
-<h3>emp</h3>
-{% elif dept == "manager" %}
-<button>
-    <a href="{% url 'register' %}"></a>
-    register
-</button>
-{% elif dept == "admin" %}
-<h3>admin</h3>
+
+<div class="container">
+
+
+    {% if user.is_anonymous %}
+        <h1>Login</h1>
+        <button class='btn btn-primary'>
+            <a href="{% url 'login' %}">login</a>
+            
+        </button>
+
+    {% elif user.is_superuser or user.is_staff %}
+        <button class='btn btn-primary'>
+            <a href="{% url 'register' %}">register</a>
+            
+        </button>
+
+    {% else %}
+        <button class='btn btn-dark'>
+            <a href=""></a>  
+            Apply for leave
+        </button>
+        <hr>
+
+        <h3>No. of leaves Available: {{nofleaves}}</h1>
+        <hr>
+        <h2>Leave's applied</h2>
+        <ul class="list-group">
+            <!-- {% for leave in leaves %} -->
+            <li class="list-group-item">Name:</li>
+            <li class="list-group-item">Start Date:</li>
+            <li class="list-group-item">End Date:</li>
+            <li class="list-group-item">Total Days:</li>
+            <li class="list-group-item">Status:</li>
+
+            <!-- {% endfor %} -->
+            
+
+            <hr>
+          </ul>
+
+        <hr>
+        
+
+</div>
+
 {% endif %}
 
 {% endblock content %}

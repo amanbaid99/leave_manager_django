@@ -11,74 +11,43 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def home(request):
-    dept=None
     user=request.user
-    if user.is_superuser or user.is_anonymous:
+    u=User.objects.get(username=user)
+    e=Employee.objects.get(user=user.id)
+    leave=Leave.objects.get_or_create(employee=e)
+    # pop_leave=leave_set.all()
+    print(leave)
+    nofleaves=None
+    if user.is_superuser:
         pass
-    else:
-        u=User.objects.get(username=user)
-        dept=u.employee.e_type
-        print(dept)
-    context={'dept':dept}
+    else: 
+        nofleaves=u.employee.no_of_leaves
+    context={'nofleaves':nofleaves,'leave':leave,}
     return render(request,"leaveApp/home.html",context)
 
 
+@login_required
 def register(request):
-    dept=None
-    user=request.user
-    if user.is_superuser or user.is_anonymous:
-        pass
-    else:
-        u=User.objects.get(username=user)
-        dept=u.employee.e_type
-        print(dept)
-    
-
-
+  
     registered = False
 
     if request.method == 'POST':
 
-        # Get info from "both" forms
-        # It appears as one form to the user on the .html page
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileInfoForm(data=request.POST)
 
-        # Check to see both forms are valid
-        if user_form.is_valid() and profile_form.is_valid():
-
-            # Save User Form to Database
-            user = user_form.save()
-
-            # Hash the password
+      
+        if user_form.is_valid() and profile_form.is_valid():  
+            user = user_form.save() 
             user.set_password(user.password)
-
-            # Update with Hashed password
             user.save()
-
-            # Now we deal with the extra info!
-
-            # Can't commit yet because we still need to manipulate
             profile = profile_form.save(commit=False)
-
-            # Set One to One relationship between
-            # UserForm and UserProfileInfoForm
             profile.user = user
-
-            # # Check if they provided a profile picture
-            # if 'profile_pic' in request.FILES:
-            #     print('found it')
-            #     # If yes, then grab it from the POST form reply
-            #     profile.profile_pic = request.FILES['profile_pic']
-
-            # Now save model
             profile.save()
-
-            # Registration Successful!
             registered = True
 
         else:
-            # One of the forms was invalid if this else gets called.
+  
             print(user_form.errors,profile_form.errors)
 
     else:
@@ -91,10 +60,12 @@ def register(request):
     return render(request,'leaveApp/registration.html',
                           {'user_form':user_form,
                            'profile_form':profile_form,
-                           'registered':registered,
-                           'dept':dept})
+                           'registered':registered,})
 
 
 class LogOutView(TemplateView):
-    template_name = "leaveApp/main.html"
+    template_name = "leaveApp/home.html"
+
+class LogInView(TemplateView):
+    template_name="leaveApp/home.html"
 
