@@ -1,5 +1,15 @@
 {% extends 'leaveApp/main.html' %}
 {% block content %}
 
+{% if dept == "employee" %}
+<h3>emp</h3>
+{% elif dept == "manager" %}
+<button>
+    <a href="{% url 'register' %}"></a>
+    register
+</button>
+{% elif dept == "admin" %}
+<h3>admin</h3>
+{% endif %}
 
 {% endblock content %}
