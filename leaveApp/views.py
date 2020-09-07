@@ -7,27 +7,38 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 
 # Create your views here.
 
 def home(request):
+
     user=request.user
     u=User.objects.get(username=user)
-    
+
     leave_pending=Leave.objects.filter(approved="Pending")
     leave_approved=Leave.objects.filter(approved="Approved")
     leave_declined=Leave.objects.filter(approved="Declined")
-    
-    nofleaves=None
-    if user.is_superuser:
-        pass
-    else: 
-        e=Employee.objects.get(user=user.id)
-        nofleaves=u.employee.no_of_leaves
-    context={'nofleaves':nofleaves,'leave_pending':leave_pending,'leave_approved':leave_approved,
+    context={'leave_pending':leave_pending,'leave_approved':leave_approved,
                                                                 'leave_declined':leave_declined,}
     return render(request,"leaveApp/home.html",context)
 
+
+def approve(request,pk):
+    leave=Leave.objects.get(id=pk)
+    leave.approved="Approved"
+    leave.save()
+    return reverse_lazy('home')
+
+def decline(request,pk):
+    leave=Leave.objects.get(id=pk)
+    leave.approved="Decline"
+    leave.save()
+    return reverse_lazy('home')
+    
+    
+    
+    
 
 @login_required
 def register(request):
