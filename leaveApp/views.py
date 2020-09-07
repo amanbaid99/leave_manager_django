@@ -13,16 +13,19 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     user=request.user
     u=User.objects.get(username=user)
-    e=Employee.objects.get(user=user.id)
-    leave=Leave.objects.get_or_create(employee=e)
-    # pop_leave=leave_set.all()
-    print(leave)
+    
+    leave_pending=Leave.objects.filter(approved="Pending")
+    leave_approved=Leave.objects.filter(approved="Approved")
+    leave_declined=Leave.objects.filter(approved="Declined")
+    
     nofleaves=None
     if user.is_superuser:
         pass
     else: 
+        e=Employee.objects.get(user=user.id)
         nofleaves=u.employee.no_of_leaves
-    context={'nofleaves':nofleaves,'leave':leave,}
+    context={'nofleaves':nofleaves,'leave_pending':leave_pending,'leave_approved':leave_approved,
+                                                                'leave_declined':leave_declined,}
     return render(request,"leaveApp/home.html",context)
 
 
@@ -61,6 +64,9 @@ def register(request):
                           {'user_form':user_form,
                            'profile_form':profile_form,
                            'registered':registered,})
+
+
+
 
 
 class LogOutView(TemplateView):

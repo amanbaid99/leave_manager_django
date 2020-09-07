@@ -22,10 +22,11 @@ class Leave(models.Model):
     start_date=models.DateField(auto_now_add=False)
     end_date=models.DateField(auto_now_add=False)
     req_date=models.DateTimeField(default=datetime.datetime.now())
+    approved_by=models.CharField(max_length=100,blank=True)
     STATUS_OPTIONS=(
-        ("Approve","Approve"),
+        ("Approved","Approved"),
         ("Pending","Pending"),
-        ("Decline","Decline"),
+        ("Declined","Declined"),
     )
     approved=models.CharField(max_length=10,choices=STATUS_OPTIONS,default='Pending')
 
@@ -34,7 +35,7 @@ class Leave(models.Model):
 
     @property
     def date_diff(self):
-        return (self.start_date - self.end_date).days
+        return (self.end_date - self.start_date).days
 
     
     
