@@ -1,3 +1,16 @@
+A simple Website for employee's of a firm to apply for leave requests, and get it approved by the manager.
+ -it has 3 users :
+    1.Admin
+    2.Manager &
+    3.Employee
+ - only admin can add a new user.
+ - manager and admin both can approve or decline a leave request.
+ -user can't access the site without logging in.
+ - manager can only view the pending requests.
+ - admin can view all the requests by all employees and manager approvals.
+
+
+
 How to Run the site:
 
 1.start the virtual env by pasting this code in the terminal insdie the folder directory
