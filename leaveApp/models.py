@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.utils import timezone
 import datetime
 from django.contrib import auth
 from django.conf import settings
@@ -17,9 +16,9 @@ class Employee(models.Model):
 
 class Leave(models.Model):
     employee=models.ForeignKey(Employee,on_delete=models.CASCADE,null=True,blank=True)
+    title=models.CharField(max_length=100,blank=True)
     start_date=models.DateField(auto_now_add=False)
     end_date=models.DateField(auto_now_add=False)
-    req_date=models.DateTimeField(default=datetime.datetime.now())
     total_days=models.IntegerField(blank=True,null=True)
     approved_by=models.CharField(max_length=100,null=True,blank=True)
     description=models.TextField(max_length=500,blank=True)

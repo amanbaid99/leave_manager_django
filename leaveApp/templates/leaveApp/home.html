@@ -4,17 +4,16 @@
 
 <div class="container">
     {% if user.is_anonymous %}
-        <h1>Login</h1>
-        <button class='btn btn-primary'>
-            <a href="{% url 'login' %}">login</a>    
-        </button>
+        <h1>Please Login</h1>
+        <a href="{% url 'login' %}">
+            <button class='btn btn-primary'>
+                login
+            </button>
+            </a>    
+       
 
-    {% elif user.is_staff %}
-        <button class='btn btn-primary'>
-            <a href="{% url 'register' %}"></a>  
-            register new user
-        </button>
-        <hr>
+    {% elif user.is_staff and not user.is_superuser %}
+       
         <h1>Leave Requests</h1>
         <hr><br>
         <ul class="list-group">
@@ -24,6 +23,7 @@
             {% for leaves in leave_pending %}
             
                 <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+                <li class="list-group-item">Title: {{leaves.title}}</li>
                 <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
@@ -47,12 +47,47 @@
             <hr>
             {% endfor %}
 
-
-            <h2>Approved Requests</h2>
+    {% elif user.is_superuser  %}    
+        <button class='btn btn-primary'>
+            <a href="{% url 'register' %}"></a>  
+            register new user
+        </button>
+        <h2>Pending Requests</h2>
+        <hr>
+         {% for leaves in leave_pending %}
+    
+            <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+            <li class="list-group-item">Title: {{leaves.title}}</li>
+            <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
+            <li class="list-group-item">End Date: {{leaves.end_date}}</li>
+            <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
+            <li class="list-group-item">Total Leaves Remaining: {{leaves.employee.no_of_leaves}}</li>
+            <li class="list-group-item">Description: {{leaves.description}}</li>
+            <li class="list-group-item">Status: {{leaves.approved}}</li>
+            <li class="list-group-item">
+            
+                    <a href="{% url 'approve' leaves.id %}">
+                        <button type="button" class=" btn btn-success">
+                            Approve
+                        </button>
+                    </a>
+                    &nbsp;
+                    <a href="{% url 'decline' leaves.id %}">
+                        <button type="button" class=" btn btn-danger">
+                            Decline
+                        </button>
+                    </a>
+            </li>
+            <hr>
+            {% endfor %}
+    
+    
+        <h2>Approved Requests</h2>
             <hr>
             {% for leaves in leave_approved %}
              
                 <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+                <li class="list-group-item">Title: {{leaves.title}}</li>
                 <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
@@ -68,6 +103,7 @@
             {% for leaves in leave_declined %}
                 
                 <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+                <li class="list-group-item">Title: {{leaves.title}}</li>
                 <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
@@ -95,6 +131,7 @@
             {% for leaves in leave_populate %}
 
             <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+            <li class="list-group-item">Title: {{leaves.title}}</li>
             <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
             <li class="list-group-item">End Date: {{leaves.end_date}}</li>
             <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>

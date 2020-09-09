@@ -3,11 +3,21 @@
 <div class="container">
   <div class="jumbotron">
    
-    {% if submitted%}
-      <h1>Leave request sent!</h1>
-      <h2>{{ emp.no_of_leaves }}</h2>
+    {% if submitted %}
+      <h1>Leave request sent!</h1><br>
+        <a href="{% url 'home' %}">
+          <button type="button" class=" btn btn-success">
+          back to home
+          </button>
+      </a>
+      
     {% elif exceeded %}
-      <h1> Sorry Leave limit exceeded</h1>
+      <h1> Sorry Leave limit exceeded</h1><br>
+      <a href="{% url 'home' %}">
+        <button type="button" class=" btn btn-success">
+        back to home
+        </button>
+    </a>
     {% else %}
       <form enctype="multipart/form-data" method="POST">
         {% csrf_token %}

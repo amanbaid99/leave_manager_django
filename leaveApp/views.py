@@ -10,12 +10,13 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponsePermanentRedirect
 
 
+
 def home(request):
 
     #general data
-    user=request.user
     emp=None
-    if user.is_superuser:
+    user=request.user
+    if user.is_superuser or user.is_anonymous:
         pass
     else:
         emp=Employee.objects.get(user=user)

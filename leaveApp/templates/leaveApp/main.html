@@ -17,6 +17,17 @@
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <div class="d-flex justify-content-end">
+    {% if user.is_anonymous %}
+    <a href="{% url 'login' %}">
+      <button class="btn btn-primary">Login</button>
+    </a>
+    {% else %}
+    <a href="{% url 'logout' %}">
+      <button class="btn btn-primary">Logout</button>
+    </a>
+    {% endif %}
+  </div>
   </nav>
   <div class="jumbotron jumbotron-fluid">
     <div class="container">

@@ -1,0 +1,28 @@
+How to Run the site:
+
+1.start the virtual env by pasting this code in the terminal insdie the folder directory
+    env\Scripts\activate
+2.type this code in the terminal to start the server
+    python manage.py runserver
+3. go the locahost address(mostly  http://127.0.0.1:8000/)
+4.Log in Credentials for :
+    Admin:
+        username: admin
+        password: passkeyadmin
+
+    Manager:
+        username: manager
+        password: passkeymanager
+
+    Employee:
+        username: employee
+        password: passkeyemp
+5. To ensure the site doesnt break when adding Admin,manager or employee make sure:
+    1.To give admin superuser and staff access
+    2. Manager only staff access
+    3. employee no staff or superuser access
+6. superuser can also be created using the command 
+    python manage.py createsuperuser
+
+
+
