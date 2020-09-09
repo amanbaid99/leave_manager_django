@@ -20,7 +20,9 @@ class Leave(models.Model):
     start_date=models.DateField(auto_now_add=False)
     end_date=models.DateField(auto_now_add=False)
     req_date=models.DateTimeField(default=datetime.datetime.now())
-    approved_by=models.CharField(max_length=100,blank=True)
+    total_days=models.IntegerField(blank=True,null=True)
+    approved_by=models.CharField(max_length=100,null=True,blank=True)
+    description=models.TextField(max_length=500,blank=True)
     STATUS_OPTIONS=(
         ("Approved","Approved"),
         ("Pending","Pending"),

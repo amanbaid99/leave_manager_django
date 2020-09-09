@@ -28,6 +28,7 @@
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
                 <li class="list-group-item">Total Leaves Remaining: {{leaves.employee.no_of_leaves}}</li>
+                <li class="list-group-item">Description: {{leaves.description}}</li>
                 <li class="list-group-item">Status: {{leaves.approved}}</li>
                 <li class="list-group-item">
                    
@@ -56,7 +57,9 @@
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
                 <li class="list-group-item">Total Leaves Remaining: {{leaves.employee.no_of_leaves}}</li>
+                <li class="list-group-item">Description: {{leaves.description}}</li>
                 <li class="list-group-item">Status: {{leaves.approved}}</li>
+                <li class="list-group-item">Approved By: {{leaves.approved_by}}</li>
             <hr>
             {% endfor %}
 
@@ -69,7 +72,9 @@
                 <li class="list-group-item">End Date: {{leaves.end_date}}</li>
                 <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
                 <li class="list-group-item">Total Leaves Remaining: {{leaves.employee.no_of_leaves}}</li>
+                <li class="list-group-item">Description: {{leaves.description}}</li>
                 <li class="list-group-item">Status: {{leaves.approved}}</li>
+                <li class="list-group-item">Declined By: {{leaves.approved_by}}</li>
             <hr>
             {% endfor %}
 

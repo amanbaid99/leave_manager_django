@@ -36,15 +36,20 @@ def home(request):
 def approve(request,pk):
     leave=Leave.objects.get(id=pk)
     leave.approved="Approved"
-    leave.employee.no_of_days = leave.employee.no_of_leaves - leave.date_diff
+    leave.approved_by=request.user.username
     leave.save()
+    emp=leave.employee
+    emp.user=leave.employee.user
+    emp.no_of_leaves=(emp.no_of_leaves - leave.total_days)
+    emp.save()
     return HttpResponsePermanentRedirect('/')
 
 def decline(request,pk):
     leave=Leave.objects.get(id=pk)
-    leave.approved="Decline"
+    leave.approved="Declined"
+    leave.approved_by=request.user.username
     leave.save()
-    return reverse_lazy('home')
+    return HttpResponsePermanentRedirect('/')
     
     
 @login_required
@@ -60,17 +65,14 @@ def applyforleave(request):
             start_date=leave_form.cleaned_data['start_date']
             end_date=leave_form.cleaned_data['end_date']
             total_days=(end_date-start_date).days
-
+            
             if total_days < nod:
                 leave = leave_form.save()
                 leave.employee=emp
+                leave.total_days=total_days
                 leave.save()
-                updated_leaves=(emp.no_of_leaves-total_days)
-                emp.user=request.user
-                emp.no_of_leaves=updated_leaves
-                emp.save()
-                print(updated_leaves)
                 submitted = True
+
             else:
                 exceeded= True
         else:
@@ -114,4 +116,9 @@ class LogOutView(TemplateView):
 
 class LogInView(TemplateView):
     template_name="leaveApp/home.html"
+
+
+
+
+
 

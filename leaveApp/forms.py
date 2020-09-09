@@ -23,7 +23,7 @@ class leaveForm(forms.ModelForm):
 
     class Meta():
         model = Leave
-        fields = ('employee','start_date','end_date')
+        fields = ('employee','start_date','end_date','description')
         widgets = {
             'start_date': DateInput(attrs={'type': 'date'}),
             'end_date': DateInput(attrs={'type': 'date'}),
