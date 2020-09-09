@@ -2,33 +2,43 @@ from django.shortcuts import render
 from django.contrib.auth import views as auth_views
 from .models import *
 from django.views.generic import TemplateView
-from .forms import UserForm,UserProfileInfoForm
+from .forms import UserForm,UserProfileInfoForm,leaveForm
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
+from django.http import HttpResponsePermanentRedirect
 
-# Create your views here.
 
 def home(request):
 
+    #general data
     user=request.user
-    u=User.objects.get(username=user)
+    emp=None
+    if user.is_superuser:
+        pass
+    else:
+        emp=Employee.objects.get(user=user)
 
+    #data for manager/adminpage
     leave_pending=Leave.objects.filter(approved="Pending")
     leave_approved=Leave.objects.filter(approved="Approved")
     leave_declined=Leave.objects.filter(approved="Declined")
+    
+    #data for employee
+    leave_populate= Leave.objects.filter(employee=emp)
+    print(leave_populate)
     context={'leave_pending':leave_pending,'leave_approved':leave_approved,
-                                                                'leave_declined':leave_declined,}
+            'leave_declined':leave_declined,'leave_populate':leave_populate}
     return render(request,"leaveApp/home.html",context)
 
 
 def approve(request,pk):
     leave=Leave.objects.get(id=pk)
     leave.approved="Approved"
+    leave.employee.no_of_days = leave.employee.no_of_leaves - leave.date_diff
     leave.save()
-    return reverse_lazy('home')
+    return HttpResponsePermanentRedirect('/')
 
 def decline(request,pk):
     leave=Leave.objects.get(id=pk)
@@ -37,20 +47,49 @@ def decline(request,pk):
     return reverse_lazy('home')
     
     
+@login_required
+def applyforleave(request):
+    emp=Employee.objects.get(user=request.user)
+    nod=emp.no_of_leaves
+    submitted= False
+    exceeded=False
+
+    if request.method == 'POST':
+        leave_form = leaveForm(data=request.POST)
+        if leave_form.is_valid():
+            start_date=leave_form.cleaned_data['start_date']
+            end_date=leave_form.cleaned_data['end_date']
+            total_days=(end_date-start_date).days
+
+            if total_days < nod:
+                leave = leave_form.save()
+                leave.employee=emp
+                leave.save()
+                updated_leaves=(emp.no_of_leaves-total_days)
+                emp.user=request.user
+                emp.no_of_leaves=updated_leaves
+                emp.save()
+                print(updated_leaves)
+                submitted = True
+            else:
+                exceeded= True
+        else:
+            print(leave_form.errors)
+    else: 
+        leave_form = leaveForm()
     
-    
+    return render(request,'leaveApp/leave.html',
+                          {'leave_form':leave_form,
+                          'submitted':submitted,'emp':emp,'exceeded':exceeded})
 
 @login_required
 def register(request):
-  
     registered = False
 
     if request.method == 'POST':
-
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileInfoForm(data=request.POST)
 
-      
         if user_form.is_valid() and profile_form.is_valid():  
             user = user_form.save() 
             user.set_password(user.password)
@@ -59,25 +98,15 @@ def register(request):
             profile.user = user
             profile.save()
             registered = True
-
         else:
-  
             print(user_form.errors,profile_form.errors)
-
     else:
-        # Was not an HTTP post so we just render the forms as blank.
         user_form = UserForm()
         profile_form = UserProfileInfoForm()
-
-    # This is the render and context dictionary to feed
-    # back to the registration.html file page.
     return render(request,'leaveApp/registration.html',
                           {'user_form':user_form,
                            'profile_form':profile_form,
                            'registered':registered,})
-
-
-
 
 
 class LogOutView(TemplateView):

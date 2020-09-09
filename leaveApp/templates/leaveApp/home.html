@@ -9,7 +9,7 @@
             <a href="{% url 'login' %}">login</a>    
         </button>
 
-    {% elif user.is_superuser or user.is_staff %}
+    {% elif user.is_staff %}
         <button class='btn btn-primary'>
             <a href="{% url 'register' %}"></a>  
             register new user
@@ -76,33 +76,34 @@
           </ul>
 
     {% else %}
-        <a href="">
+        <a href="{% url 'leave' %}">
             <button type="button" class=" btn btn-success">
             Apply For Leave
             </button>
-         </a>
+        </a>
         <hr>
 
         <h3>No. of leaves Available:</h1>
         <hr>
         <h2>Leave's applied</h2>
         <ul class="list-group">
-        
-            <li class="list-group-item">Name:</li>
-            <li class="list-group-item">Start Date:</li>
-            <li class="list-group-item">End Date:</li>
-            <li class="list-group-item">Total Days:</li>
-            <li class="list-group-item">Status:</li>
+            {% for leaves in leave_populate %}
 
-    
+            <li class="list-group-item">Name: {{leaves.employee.user.username}}</li>
+            <li class="list-group-item">Start Date: {{leaves.start_date}}</li>
+            <li class="list-group-item">End Date: {{leaves.end_date}}</li>
+            <li class="list-group-item">Total Days: {{leaves.date_diff}}</li>
+            <li class="list-group-item">Total Leaves Remaining: {{leaves.employee.no_of_leaves}}</li>
+            <li class="list-group-item">Status: {{leaves.approved}}</li>
+            <hr>
+            {% endfor %}
             
 
             <hr>
-          </ul>
+        </ul>
 
         <hr>
-        
-
+    
 </div>
 
 {% endif %}
